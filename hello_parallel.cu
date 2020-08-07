@@ -38,8 +38,8 @@ int main() {
     //num2_h = (double*) malloc(data_size);
 
     for(int i=0; i<1048576; i++){
-        num1[i] = i;
-        num2[i] = i;
+        num1[i] = 0;
+        num2[i] = 1;
         //num1_h[i] = num1[i];
         //num2_h[i] = num2[i];
     }
@@ -47,8 +47,11 @@ int main() {
     cudaMemcpy(num1_d, num1, data_size, cudaMemcpyHostToDevice);
     cudaMemcpy(num2_d, num2, data_size, cudaMemcpyHostToDevice);
 
-    hello<<< grid, block >>>(num1_d, num2_d);
-    cudaDeviceSynchronize();
+
+    for(int count=0; count<10000; count++){
+        hello<<< grid, block >>>(num1_d, num2_d);
+        cudaDeviceSynchronize();
+    }
 
     cudaMemcpy(num1, num1_d, data_size, cudaMemcpyDeviceToHost);
 
