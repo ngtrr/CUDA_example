@@ -17,7 +17,11 @@ double num2[1048576];
 
 __global__ void hello(double* num1, double* num2){
     int i = blockIdx.x*blockDim.x + threadIdx.x;
-    num1[i] = num1[i] - num2[i];
+    if(i%200000==0){
+        num1[i] = num1[i] + num2[i];
+    }else{
+        num1[i] = num1[i] - num2[i];
+    }
 }
 
 int main() {
@@ -34,7 +38,7 @@ int main() {
     //num2_h = (double*) malloc(data_size);
 
     for(int i=0; i<1048576; i++){
-        num1[i] = 2*i;
+        num1[i] = i;
         num2[i] = i;
         //num1_h[i] = num1[i];
         //num2_h[i] = num2[i];
@@ -48,7 +52,7 @@ int main() {
 
     cudaMemcpy(num1, num1_d, data_size, cudaMemcpyDeviceToHost);
 
-    for(int i=0; i<1048576; i=i+100000)printf("No.%d value%g\n", i, num1[i]);
+    for(int i=0; i<1048576; i=i+100000)printf("No.%d value : %g\n", i, num1[i]);
 
     cudaFree(num1_d);
     cudaFree(num2_d);
